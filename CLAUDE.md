@@ -2,6 +2,8 @@
 
 Handoff notes so Claude Code can pick up where earlier work left off (as of Oct 25, 2026).
 
+Repo: https://github.com/JohnHuang16/hexapod (public, `main`). Working copy: `~/Desktop/Projects/hexapod`. A duplicate copy exists at `~/Downloads/hexapod`; treat it as stale.
+
 ## Who / why
 - John Huang, UC Berkeley ECE freshman. Background in FTC robotics, CAD (Onshape), mechatronics, Python/C++.
 - Building a **2 ft hexapod** as a **build-in-public TikTok series** (daily progress videos) and a portfolio project.
@@ -36,7 +38,9 @@ Build plan doc (Claude Docs): https://claude.ai/artifact/U4NFLFAUziTXhzSJmVreEE
 - `set_id.py N`: sets the ID of the single connected servo (broadcast 254).
 - `profile_demo.py [deg] [s]`: synchronized moves (cmd 7 move-and-wait per servo + cmd 11 broadcast start, 50 Hz), comparing linear / smoothstep / min-jerk.
 - `camera_demo.py [segment]`: ~1 min choreographed filming demo.
-- All verified on hardware except `camera_demo.py` and the updated `profile_demo.py` (only simulated). Position 0–1000 = 0–240°, about 4.17 units/°. Servos land within ~0–2 units of target.
+- `leg_ik.py x y z`: IK (foot mm → `LegAngles(coxa, femur, knee)` → servo positions) with reach check (50 ≤ d ≤ 230, foot outside coxa radius) and servo range check. `--move` uses `profile_demo.SyncBus` (min-jerk, speed capped at 150°/s), `--fk`, `--test` (self-test, all passing). Angle conventions: coxa 0 = straight out, femur 0 = horizontal (+ up), knee 0 = tibia in line with femur (+ folded). Knee-up solution only.
+- `leg_cal.json`: per-joint `sid`, `ref_pos` (500), `ref_angle` (joint angle when servo reads ref_pos), `sign` (±1, flip if a joint runs backwards), `min_pos`/`max_pos` soft limits. Defaults = standing pose at 500 for all three (femur 20.99°, knee 91.82°). **Signs are unverified until the leg is assembled.**
+- All verified on hardware except `camera_demo.py`, the updated `profile_demo.py`, and `leg_ik.py --move` (only simulated / self-tested). Position 0–1000 = 0–240°, about 4.17 units/°. Servos land within ~0–2 units of target.
 - **Hiwonder "Bus Servo Terminal" Mac app crashes when commanding moves.** Use the scripts.
 
 ## Mechanical decisions so far
@@ -46,6 +50,7 @@ Build plan doc (Claude Docs): https://claude.ai/artifact/U4NFLFAUziTXhzSJmVreEE
 - Unflanged 6804 retention: Ø32 pocket + Ø~29.5 lip (outer ring only); Ø20 journal + Ø~23 shoulder (inner ring only); journal ~6.8 mm (0.2 mm shorter than bearing); Ø~23 × 2 mm clamp washer squeezed by the horn screws.
 - **Horns:** keeping the plastic horns for now (torque only in this design); concern about the short screws. Options: capture the horn in a hub pocket with pegs + longer M2 screws, or switch to **25T aluminum clamp-style horns** with M3 holes → M3 inserts (recommended).
 - Print hubs upright. Test coupons for fits: journals 19.80–20.00 mm, pockets 32.0–32.2 mm.
+- **Horn/assembly convention (Oct 25, 2026):** fit every horn with the servo at position **500 and the leg in the standing pose** (coxa straight out, femur 21° up, knee bent 92°). This centers the 240° servo range on the working pose. `leg_cal.json` encodes it; if a horn ends up on a different tooth, change `ref_angle` instead of re-fitting.
 
 ## CAD status (Onshape document "hexapod")
 - Imported an **HTD-35H SolidWorks model** (same case as the 45H) as the servo reference. Measured 50.90 mm tip to tip (drawing says 51.1). Use an open composite to keep colors. Add mate connectors on the spline (at the horn-seat face) and on the rear shaft.
@@ -56,7 +61,7 @@ Build plan doc (Claude Docs): https://claude.ai/artifact/U4NFLFAUziTXhzSJmVreEE
 1. **When calipers arrive:** measure the spline Ø, horn hole circle and hole size, rear shaft Ø/length, collar height, servo body along the axis (~43 mm?), and the spline axis offset from the body end (~10–11 mm). Confirm 25T.
 2. **Order:** 6804-2RS (10-pack), F625ZZ (10-pack), M5 shoulder bolts sized to plate + arm thickness, maybe 25T aluminum clamp horns. Optional: M2 hardware if keeping plastic horns.
 3. **CAD the joint module once**, test-print fit coupons, then the coxa → femur box → tibia → foot (rounded, rubber cap) → desk test stand.
-4. **Write the IK script:** foot (x, y, z) → θ1/θ2/γ → servo positions, with a reach check and per-joint zero offsets/calibration (set horns at position 500 before fitting).
+4. ~~Write the IK script~~ **Done** (`servo/leg_ik.py`). Remaining: once the leg is assembled, verify each joint's `sign` in `leg_cal.json` with small `--move`s, set `min_pos`/`max_pos` soft limits from the real hard stops, then write the shape-tracing / step-motion script on top of `foot_to_positions()`.
 5. Install the 1000 µF capacitor across the BusLinker power input.
 6. Strength test → Phase 2 decision.
 

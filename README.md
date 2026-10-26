@@ -38,8 +38,11 @@ Setup once: `pip3 install pyserial`. Run scripts from the `servo/` folder; they 
 | `set_id.py N` | Sets the ID of the **one** connected servo to `N` |
 | `profile_demo.py [deg] [s]` | Moves all three servos together, comparing linear, smoothstep, and minimum-jerk profiles |
 | `camera_demo.py [segment]` | Choreographed ~1 minute show for filming (wave, face-off, speed ramp, robot mode, bow) |
+| `leg_ik.py x y z` | Inverse kinematics: foot target (mm, leg frame) → joint angles → servo positions, with a reach check. `--move` sends the leg there (synchronized min-jerk), `--fk` checks the other direction, `--test` runs the self-test. Per-joint zero offsets, direction signs and soft limits live in `leg_cal.json` |
 
 Joint IDs: **1 = coxa, 2 = femur, 3 = tibia**. Chain: BusLinker → 1 → 2 → 3.
+
+Leg frame for `leg_ik.py`: origin at the coxa axis at femur-axis height, +x straight out from the body, +y counter-clockwise seen from above, +z up. Standing pose is (180, 0, −100). Assembly convention: fit every horn with the servo at position 500 and the leg in the standing pose, so each joint has ±120° of travel around where it works.
 
 ### How the bus works
 

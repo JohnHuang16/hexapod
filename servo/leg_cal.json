@@ -1,0 +1,26 @@
+{
+  "coxa": {
+    "sid": 1,
+    "ref_angle": 0.0,
+    "ref_pos": 500,
+    "sign": 1,
+    "min_pos": 0,
+    "max_pos": 1000
+  },
+  "femur": {
+    "sid": 2,
+    "ref_angle": 20.99,
+    "ref_pos": 500,
+    "sign": 1,
+    "min_pos": 0,
+    "max_pos": 1000
+  },
+  "knee": {
+    "sid": 3,
+    "ref_angle": 91.82,
+    "ref_pos": 500,
+    "sign": 1,
+    "min_pos": 0,
+    "max_pos": 1000
+  }
+}
