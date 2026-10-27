@@ -6,7 +6,8 @@ Run (no hardware needed, just prints):
     python3 leg_ik.py --fk 0 21 -70.8     forward check: coxa, femur, tibia angles (deg) -> foot (mm)
     python3 leg_ik.py --test              self-test against docs/kinematics.md, round trips, reach limits
 Run (moves the real servos, synchronized minimum-jerk move):
-    python3 leg_ik.py --move 180 0 -100 [--time 1.5]
+    python3 leg_ik.py --move 180 0 -100 [--time 1.5] [--hold]
+        (motors are switched off after the move unless --hold is given; a limp leg will drop)
     python3 leg_ik.py --move --stand     shortcut for the standing pose
 
 Leg frame (right-handed, mm):
@@ -228,6 +229,9 @@ def main(argv):
     move = "--move" in args
     if move:
         args.remove("--move")
+    hold = "--hold" in args
+    if hold:
+        args.remove("--hold")
     secs = 1.5
     if "--time" in args:
         i = args.index("--time")
@@ -268,6 +272,8 @@ def main(argv):
     bus.move_together(pos, secs, pd.minjerk)
     final = {sid: bus.read_pos(sid) for sid in pos}
     print("landed:", final, "->", positions_to_angles(final, cal))
+    if not hold:
+        bus.release(pos)
 
 
 if __name__ == "__main__":

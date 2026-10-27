@@ -2,7 +2,7 @@
 show_demo.py - exaggerated motion-profile show for the three bare servos (horns on, no leg).
 
 Run:  python3 show_demo.py [loops]        default 3 loops, ~30 s each
-Stop: Ctrl-C (servos stay wherever they are, still powered)
+Stop: Ctrl-C (re-centers, then motors off)
 
 Profiles are deliberately cartoonish: long slow wind-ups, a whip in the middle,
 elastic overshoot, bounces, and a rippling sine wave that speeds up. Everything is
@@ -155,7 +155,8 @@ def main():
     except KeyboardInterrupt:
         print("\nstopped")
     show.move(all_(0), 1.5, pd.minjerk, "center")
-    print("done; servos holding at their reference positions")
+    bus.release(ref)
+    print("done")
 
 
 if __name__ == "__main__":

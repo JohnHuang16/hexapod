@@ -89,6 +89,13 @@ class ServoBus:
     def motor(self, sid, on):
         self._send(sid, LOAD_UNLOAD, [1 if on else 0])
 
+    def release(self, ids=(1, 2, 3)):
+        """Motors off so the servos go limp and stop drawing current. Call this when a script is done
+        (project rule: never leave servos holding after a run; a limp servo re-engages on the next move)."""
+        for sid in ids:
+            self.motor(sid, False)
+        print("Motors off (servos limp).")
+
 
 def find_port():
     candidates = (glob.glob("/dev/cu.usbserial*") + glob.glob("/dev/cu.wchusbserial*")
@@ -126,7 +133,8 @@ def main():
         time.sleep(1.3)
         print(f"  now at {bus.read_pos(sid)}, {bus.read_temp(sid)} C")
 
-    print("\nDone. Servos are still holding position; unplug the 12 V to relax them.")
+    bus.release([sid for sid, _ in found])
+    print("\nDone.")
 
 
 if __name__ == "__main__":

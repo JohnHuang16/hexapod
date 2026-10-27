@@ -69,6 +69,7 @@ Build plan doc (Claude Docs): https://claude.ai/artifact/U4NFLFAUziTXhzSJmVreEE
 6. Strength test → Phase 2 decision.
 
 ## Safety rules
+- **Always switch motors off when a run is done** (`bus.release()`; John's rule, Oct 26, 2026). Every script does this at exit; `leg_ik.py --move` keeps holding only with `--hold`. Never leave servos holding between runs.
 - Power off before plugging or unplugging servo cables. Set IDs with one servo connected. Tape servos down for fast demos.
 - Keep moves within limits: the servo top speed is ~0.18 s/60° at 11.1 V. Scripts cap speeds (~264°/s max in demos).
 - Later: fuse + kill switch on the LiPo line, charge LiPos in a safety bag.

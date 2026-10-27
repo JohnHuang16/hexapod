@@ -101,7 +101,8 @@ def main():
     bus.move_together(home, move_s)
 
     print("Final:", {sid: bus.read_pos(sid) for sid in IDS})
-    print("Done. Unplug the 12 V to relax the servos.")
+    bus.release(IDS)
+    print("Done.")
 
 
 if __name__ == "__main__":

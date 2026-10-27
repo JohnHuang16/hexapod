@@ -213,6 +213,7 @@ def main():
             glide(bus, HOME, 0.8)
         time.sleep(1.0)
 
+    bus.release()
     print(f"[{time.perf_counter() - show_start:5.1f}s] Done.")
 
 
