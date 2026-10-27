@@ -43,6 +43,7 @@ Build plan doc (Claude Docs): https://claude.ai/artifact/U4NFLFAUziTXhzSJmVreEE
 - All verified on hardware except `camera_demo.py`, the updated `profile_demo.py`, and `leg_ik.py --move` (only simulated / self-tested). Position 0–1000 = 0–240°, about 4.17 units/°. Servos land within ~0–2 units of target.
 - **Hiwonder "Bus Servo Terminal" Mac app crashes when commanding moves.** Use the scripts.
 - **Forcing a powered servo by hand heats it fast** (Oct 26, 2026): servo 2 read 59 °C after `show_demo.py` vs 50/51 for the others, and stayed at 52 °C while holding unloaded until released. John had pulled/twisted its horn by hand while it was holding, which drives stall current. Not a bad unit; all three read 25 °C once cooled. Rule: motor off (`bus.motor(sid, False)`) or 12 V off before moving a joint by hand. Turn motors off when idle after demos.
+- **Thermal baseline (Oct 26, 2026, bare horns):** identical ±60° sine sweep, 8 s period, 2 min: all three climbed 30 → 57/61/58 °C (servo 2 ~3 °C warmer, same curve shape, no binding). John had also pulled hard on servo 2's horn axially; by hand all three feel the same. Expect ~25 °C rise from a few minutes of continuous unloaded motion; the loaded strength test must log temperature.
 
 ## Mechanical decisions so far
 - **Servo layout:** coxa servo vertical in the body, between top and bottom plates. Femur servo and tibia servo both live **inside the femur box**, facing each other, outputs at each end (~29 mm of each servo inward, ~32 mm gap).
