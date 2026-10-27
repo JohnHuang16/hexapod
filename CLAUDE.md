@@ -42,6 +42,7 @@ Build plan doc (Claude Docs): https://claude.ai/artifact/U4NFLFAUziTXhzSJmVreEE
 - `leg_cal.json`: per-joint `sid`, `ref_pos` (500), `ref_angle` (joint angle when servo reads ref_pos), `sign` (±1, flip if a joint runs backwards), `min_pos`/`max_pos` soft limits. Defaults = standing pose at 500 for all three (femur 20.99°, knee 91.82°). **Signs are unverified until the leg is assembled.**
 - All verified on hardware except `camera_demo.py`, the updated `profile_demo.py`, and `leg_ik.py --move` (only simulated / self-tested). Position 0–1000 = 0–240°, about 4.17 units/°. Servos land within ~0–2 units of target.
 - **Hiwonder "Bus Servo Terminal" Mac app crashes when commanding moves.** Use the scripts.
+- **Servo 2 runs hotter than 1 and 3** (Oct 26, 2026, bare horns): 59 vs 50/51 °C after the 90 s `show_demo.py`; a few minutes later, still holding unloaded, 52 vs 33/34 °C, and it fell 4 °C within 10 s of going limp. Position was steady (456–457 vs target 459). Not a fault, but consider using servo 2 for the coxa (least loaded) rather than the femur, and recheck in the strength test. Turn motors off (`bus.motor(sid, False)`) or pull the 12 V when idle.
 
 ## Mechanical decisions so far
 - **Servo layout:** coxa servo vertical in the body, between top and bottom plates. Femur servo and tibia servo both live **inside the femur box**, facing each other, outputs at each end (~29 mm of each servo inward, ~32 mm gap).
