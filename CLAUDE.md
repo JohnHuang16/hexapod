@@ -2,7 +2,7 @@
 
 Handoff notes so Claude Code can pick up where earlier work left off (as of Oct 25, 2026).
 
-Repo: https://github.com/JohnHuang16/hexapod (public, `main`). Working copy: `~/Desktop/Projects/hexapod`. A duplicate copy exists at `~/Downloads/hexapod`; treat it as stale.
+Repo: https://github.com/JohnHuang16/hexapod (public, `main`). **Commit and push after every meaningful change** (John's standing instruction, Oct 26, 2026); don't wait to be asked. Working copy: `~/Desktop/Projects/hexapod`. A duplicate copy exists at `~/Downloads/hexapod`; treat it as stale.
 
 ## Who / why
 - John Huang, UC Berkeley ECE freshman. Background in FTC robotics, CAD (Onshape), mechatronics, Python/C++.
@@ -51,6 +51,7 @@ Build plan doc (Claude Docs): https://claude.ai/artifact/U4NFLFAUziTXhzSJmVreEE
 - **Horns:** keeping the plastic horns for now (torque only in this design); concern about the short screws. Options: capture the horn in a hub pocket with pegs + longer M2 screws, or switch to **25T aluminum clamp-style horns** with M3 holes → M3 inserts (recommended).
 - Print hubs upright. Test coupons for fits: journals 19.80–20.00 mm, pockets 32.0–32.2 mm.
 - **Horn/assembly convention (Oct 25, 2026):** fit every horn with the servo at position **500 and the leg in the standing pose** (coxa straight out, femur 21° up, knee bent 92°). This centers the 240° servo range on the working pose. `leg_cal.json` encodes it; if a horn ends up on a different tooth, change `ref_angle` instead of re-fitting.
+- **Horns fitted (Oct 26, 2026):** new horns pressed on with the servos holding at **coxa 429, femur 459, tibia 500** (John nudged 1 and 2 off center by eye). Those are now `ref_pos` in `leg_cal.json`; the servos read 430/460/498 afterwards. Decreasing position turned the horn clockwise as John viewed it on the bench. Joint `sign` values are still unverified.
 
 ## CAD status (Onshape document "hexapod")
 - Imported an **HTD-35H SolidWorks model** (same case as the 45H) as the servo reference. Measured 50.90 mm tip to tip (drawing says 51.1). Use an open composite to keep colors. Add mate connectors on the spline (at the horn-seat face) and on the rear shaft.
