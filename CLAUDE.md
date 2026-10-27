@@ -30,7 +30,7 @@ Build plan doc (Claude Docs): https://claude.ai/artifact/U4NFLFAUziTXhzSJmVreEE
 - 12 V 5 A barrel supply (center-positive, reads ~12.1 V at the servos).
 - Nichicon 1000 µF 25 V capacitors (not yet installed; striped leg to −).
 - Preciva M3 heat-set insert kit + 60 W iron, YIHUA stand, Loctite 242, JOREST screwdriver set, silicone mat.
-- **Calipers arrived (Oct 26, 2026).** First measurement: servo body height 40.3 / 40.4 / 40.5 mm across the three units (drawing says 40.0); size pockets for 40.5 + clearance and locate from the output face. Multimeter: confirm whether he has one.
+- **Calipers arrived (Oct 26, 2026).** First measurement: servo body length 40.30–40.55 mm across the three units (drawing says 40.0). **Decision: model servo pockets at 41.0 mm long** (biggest + ~0.2/side + print shrink margin), 20.6 mm wide, locate the servo against the output-side face and let the clamp plate take up the slack. Verify with a fit coupon first. Multimeter: confirm whether he has one.
 - 3D printer: undecided (considering Bambu Lab P2S, ~$549; can print at Jacobs Hall makerspace). Check dorm rules.
 
 ## Software (`servo/`, run with `python3`, needs `pyserial`)
