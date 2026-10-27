@@ -30,7 +30,7 @@ Build plan doc (Claude Docs): https://claude.ai/artifact/U4NFLFAUziTXhzSJmVreEE
 - 12 V 5 A barrel supply (center-positive, reads ~12.1 V at the servos).
 - Nichicon 1000 µF 25 V capacitors (not yet installed; striped leg to −).
 - Preciva M3 heat-set insert kit + 60 W iron, YIHUA stand, Loctite 242, JOREST screwdriver set, silicone mat.
-- **Calipers ordered, not yet arrived.** Multimeter: confirm whether he has one.
+- **Calipers arrived (Oct 26, 2026).** First measurement: servo body height 40.3 / 40.4 / 40.5 mm across the three units (drawing says 40.0); size pockets for 40.5 + clearance and locate from the output face. Multimeter: confirm whether he has one.
 - 3D printer: undecided (considering Bambu Lab P2S, ~$549; can print at Jacobs Hall makerspace). Check dorm rules.
 
 ## Software (`servo/`, run with `python3`, needs `pyserial`)
@@ -61,7 +61,7 @@ Build plan doc (Claude Docs): https://claude.ai/artifact/U4NFLFAUziTXhzSJmVreEE
 - `cad/HTD-45H_placeholder.step` is a rough backup model; prefer the imported HTD-35H model.
 
 ## Open items / next steps
-1. **When calipers arrive:** measure the spline Ø, horn hole circle and hole size, rear shaft Ø/length, collar height, servo body along the axis (~43 mm?), and the spline axis offset from the body end (~10–11 mm). Confirm 25T.
+1. **Measure with the calipers (in progress):** the spline Ø, horn hole circle and hole size, rear shaft Ø/length, collar height, servo body along the axis (~43 mm?), and the spline axis offset from the body end (~10–11 mm). Confirm 25T.
 2. **Order:** 6804-2RS (10-pack), F625ZZ (10-pack), M5 shoulder bolts sized to plate + arm thickness, maybe 25T aluminum clamp horns. Optional: M2 hardware if keeping plastic horns.
 3. **CAD the joint module once**, test-print fit coupons, then the coxa → femur box → tibia → foot (rounded, rubber cap) → desk test stand.
 4. ~~Write the IK script~~ **Done** (`servo/leg_ik.py`). Remaining: once the leg is assembled, verify each joint's `sign` in `leg_cal.json` with small `--move`s, set `min_pos`/`max_pos` soft limits from the real hard stops, then write the shape-tracing / step-motion script on top of `foot_to_positions()`.
