@@ -123,9 +123,12 @@ def main():
     cal = load_cal()
     ref = {j.sid: j.ref_pos for j in cal.values()}
     bus = pd.SyncBus(st.find_port())
-    for sid in ref:
-        if bus.read_pos(sid) is None:
-            sys.exit(f"ID {sid} not answering. Is the 12 V on?")
+    missing = [sid for sid in ref if bus.read_pos(sid) is None]
+    if missing:
+        print(f"skipping servos that don't answer: {missing}")
+        ref = {sid: p for sid, p in ref.items() if sid not in missing}
+    if not ref:
+        sys.exit("no servos answering. Is the 12 V on?")
     show = Show(bus, ref)
     all_ = lambda d: {sid: d for sid in ref}
 
@@ -145,9 +148,10 @@ def main():
             show.hold(0.8)
             show.move(all_(-75), 3.0, bounce, "drop and bounce")
             show.hold(0.6)
-            show.move({1: +75, 2: -75, 3: +75}, 2.0, extreme_ease, "opposite whip")
+            opp = {sid: (-75 if sid == 2 else +75) for sid in ref}
+            show.move(opp, 2.0, extreme_ease, "opposite whip")
             show.hold(0.4)
-            show.move({1: -75, 2: +75, 3: -75}, 2.0, extreme_ease, "and back")
+            show.move({sid: -d for sid, d in opp.items()}, 2.0, extreme_ease, "and back")
             show.hold(0.6)
             show.move(all_(0), 1.0, pd.minjerk, "center")
             show.ripple(80, 0.15, 0.45, 8.0, "ripple wave, speeding up")
