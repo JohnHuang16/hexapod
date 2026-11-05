@@ -136,7 +136,8 @@ def main():
         print(f"\nREFUSED: {e}")
     S = STAND
     leg.move(S.coxa, S.femur, S.knee, 2.0, label="stand")
-    print(f"end: {leg.read()}  temps: {{sid: bus.read_temp(sid) for sid in ids}}")
+    temps = {sid: bus.read_temp(sid) for sid in ids}
+    print(f"end: {leg.read()}  temps: {temps}")
     bus.release(ids)
 
 
