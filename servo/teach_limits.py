@@ -9,7 +9,24 @@ set min_pos/max_pos (and check sign) in leg_cal.json. Motors stay off afterwards
 import sys
 import time
 
+import serial
+
 import servo_test as st
+
+
+def reconnect(ids):
+    """Wait for the BusLinker's port to come back after a USB drop, reopen, keep motors off."""
+    print("  !! serial link dropped, waiting for the port to return...", flush=True)
+    while True:
+        time.sleep(0.5)
+        try:
+            bus = st.ServoBus(st.find_port())
+            if any(bus.read_pos(sid) is not None for sid in ids):
+                bus.release(ids)
+                print("  link back", flush=True)
+                return bus
+        except (serial.SerialException, OSError, SystemExit):
+            pass
 
 
 def main(argv):
@@ -30,18 +47,23 @@ def main(argv):
     print(f"start positions: {first}  -- move the joints by hand now ({secs:.0f} s)")
     t0 = time.perf_counter()
     next_print = 5.0
+    drops = 0
     while (t := time.perf_counter() - t0) < secs:
-        for sid in ids:
-            p = bus.read_pos(sid)
-            if p is None:
-                continue
-            lo[sid] = min(lo[sid], p)
-            hi[sid] = max(hi[sid], p)
-        if t >= next_print:
-            print(f"{t:4.0f}s  " + "  ".join(f"ID{sid}: now {bus.read_pos(sid)} range {lo[sid]}..{hi[sid]}" for sid in ids), flush=True)
-            next_print += 5.0
-        time.sleep(0.02)
-    print("\nsummary (position units, 4.17 per degree):")
+        try:
+            for sid in ids:
+                p = bus.read_pos(sid)
+                if p is None:
+                    continue
+                lo[sid] = min(lo[sid], p)
+                hi[sid] = max(hi[sid], p)
+            if t >= next_print:
+                print(f"{t:4.0f}s  " + "  ".join(f"ID{sid}: now {bus.read_pos(sid)} range {lo[sid]}..{hi[sid]}" for sid in ids), flush=True)
+                next_print += 5.0
+            time.sleep(0.02)
+        except (serial.SerialException, OSError):
+            drops += 1
+            bus = reconnect(ids)
+    print(f"\nsummary (position units, 4.17 per degree), {drops} link drop(s):")
     for sid in ids:
         print(f"  ID{sid}: start {first[sid]}  min {lo[sid]}  max {hi[sid]}  "
               f"span {(hi[sid] - lo[sid]) / st.UNITS_PER_DEG:.0f} deg  end {bus.read_pos(sid)}")
